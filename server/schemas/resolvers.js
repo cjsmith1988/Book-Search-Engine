@@ -59,9 +59,38 @@ const resolvers = {
           
             const token = signToken(user);
             return { token, user };
+        },
+        saveBook: async (parent, args, context) => {
+          if (context.user) {
+            
+            const book = await Book.create({ ...args, username: context.user.username });
+        
+            const updatedUser = await User.findByIdAndUpdate(
+              { _id: context.user._id },
+              { $push: { savedBooks: book._id } },
+              { new: true }
+            );
+        
+            return updatedUser;
+          }
+        
+          throw new AuthenticationError('You need to be logged in!');
+        },
+        
+        removeBook: async (parent, {bookId}, context) =>{
+          if(context.user){
+            const book = await Book.findOneAndDelete({ bookId: bookId })
+
+            
+              const updatedUser = await User.findOneAndUpdate(
+                  {_id: context.user._id},
+                  {$pull: {savedBooks: book._id}},
+                  {new: true}
+              ).populate('savedBooks');
+              return updatedUser;
+          }
+          throw new AuthenticationError('Did not delete book!');
         }
-        
-        
     }
 };
   
