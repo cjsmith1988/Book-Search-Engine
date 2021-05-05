@@ -96,5 +96,5 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
   If you have any further questions regarding this project please email: [cj1988333@hotmail.com](mailto:cj1988333@hotmail.com?subject=[Question]Book-Search).
 
-![download app](https://github.com/cjsmith1988/Book-Search-Engine/blob/main/public/images/budgetAppNotify.PNG?raw=true)
-![application screen shot](https://github.com/cjsmith1988/Book-Search-Engine/blob/main/public/images/budgetAppScreenGrab.PNG?raw=true)
+![download app](https://github.com/cjsmith1988/Book-Search-Engine/blob/master/assets/images/searchScreen.png?raw=true)
+![application screen shot](https://github.com/cjsmith1988/Book-Search-Engine/blob/master/assets/images/savedScreen.png?raw=true)
