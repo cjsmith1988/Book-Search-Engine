@@ -1,52 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { QUERY_ME } from '../utils/queries';
 import {REMOVE_BOOK} from '../utils/mutations';
 
-import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 
 
 const SavedBooks = () => {
-  
    
   
   //const [data, setUserData] = useState({});
   const {loading, data} = useQuery(QUERY_ME);
-  const userData = data?.me || {};
-  console.log(userData);
+
+
+  const[userData, setData] = useState(loading ? null : data.me);
   
-  const [removeBook, {error}] = useMutation(REMOVE_BOOK, {
-     update(cache, {data: {removeBook}}){
-
-       console.log(cache);
-       console.log(removeBook);
-       let { me } = cache.readQuery({ query: QUERY_ME });
-
-      console.log({me});
-       const booksData = {
-        savedBooks: removeBook.savedBooks.filter((x) => x.id !== '')
-      }
-      
-       console.log(booksData);
-      cache.writeQuery({
-        query: QUERY_ME,
-        data:{me: {...me,booksData}}
-      })
-      console.log(cache);
-      
-     }
-  });
+  
+  const [removeBook,] = useMutation(REMOVE_BOOK);
   
 
-  // use this to determine if `useEffect()` hook needs to run again
-  //const userDataLength = Object.keys(userData).length;
-
- 
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -60,12 +36,19 @@ const SavedBooks = () => {
         const data = await removeBook({
          variables: {bookId},
        });
+       // update state of books:
+      setData(()=>{
+        return{
+          ...userData,
+          savedBooks: data.data.removeBook.savedBooks
+        }
+      })
        // upon success, remove book's id from localStorage
       removeBookId(bookId);
       } catch (e) {
         console.error(e);
       }
-      window.location.reload(false);
+      //window.location.reload(false);
   };
 
   // if data isn't here yet, say so
